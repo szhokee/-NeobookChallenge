@@ -1,0 +1,5 @@
+python -m venv venv
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+.\venv\Scripts\Activate
+
+& "C:\Program Files\PostgreSQL\16\bin\psql" -U postgres
