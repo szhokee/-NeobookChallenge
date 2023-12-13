@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.apps import apps
 from .models import Category, Product, CartItem, Order
 from .serializers import (
     CategorySerializer,
@@ -24,13 +25,18 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'image_url', 'price_per_unit']
 
 class CartItemSerializer(serializers.ModelSerializer):
-    def get_product_serializer(self):
-        ProductSerializer = apps.get_model('your_app_name', 'ProductSerializer')
-        return ProductSerializer()
-
     class Meta:
         model = CartItem
         fields = ['id', 'product', 'quantity']
+
+    def to_representation(self, instance):
+        ProductSerializer = apps.get_model('ecoapp', 'ProductSerializer')
+        product_serializer = ProductSerializer()
+        return {
+            'id': instance.id,
+            'product': product_serializer.to_representation(instance.product),
+            'quantity': instance.quantity
+        }
 
 class OrderSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(many=True)
