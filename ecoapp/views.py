@@ -2,12 +2,14 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.apps import apps
 from .models import Category, Product, CartItem, Order
 from .serializers import CategorySerializer, ProductSerializer, CartItemSerializer, OrderSerializer
 
 class CategoryListView(APIView):
     def get(self, request):
         categories = Category.objects.all()
+        CategorySerializer = apps.get_model('ecoapp', 'CategorySerializer')
         serializer = CategorySerializer(categories, many=True)
         return Response({"categories": serializer.data})
 

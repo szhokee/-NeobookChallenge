@@ -37,7 +37,7 @@ class CartItemSerializer(serializers.ModelSerializer):
             'product': product_serializer.to_representation(instance.product),
             'quantity': instance.quantity
         }
-
+    
 class OrderSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(many=True)
 
