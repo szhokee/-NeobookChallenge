@@ -6,6 +6,7 @@ from django.apps import apps
 from .models import Category, Product, CartItem, Order
 from .serializers import CategorySerializer, ProductSerializer, CartItemSerializer, OrderSerializer
 
+
 class CategoryListView(APIView):
     def get(self, request):
         categories = Category.objects.all()
@@ -63,3 +64,7 @@ class ProductDetailView(APIView):
         serializer = ProductSerializer(product)
         return Response(serializer.data)
 
+class OrderSuccessView(APIView):
+    def get(self, request, order_id):
+        order = Order.objects.get(id=order_id)
+        return Response({"order_id": order.id, "timestamp": order.timestamp})
