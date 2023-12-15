@@ -1,6 +1,6 @@
 from django.urls import path
 from django.urls import path
-from .views import CategoryListView, ProductListView, CartView, OrderView
+from .views import CategoryListView, ProductListView, CartView, OrderView, OrderSuccessView
 
 urlpatterns = [
     # Эндпоинты для категорий и товаров
@@ -15,5 +15,7 @@ urlpatterns = [
     path('api/cart/remove/<int:product_id>/', CartView.as_view(), name='cart-remove'),
 
     # Эндпоинт для оформления заказа
+    path('order/', OrderView.as_view(), name='create-order'),
+    path('order/success/<int:order_id>/', OrderSuccessView.as_view(), name='order-success'),
     path('api/order/place/', OrderView.as_view(), name='order-place'),
 ]

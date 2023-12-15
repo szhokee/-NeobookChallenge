@@ -49,14 +49,6 @@ class CartView(APIView):
         # Логика для удаления товара из корзины
         pass
 
-class OrderView(APIView):
-    def post(self, request):
-        serializer = OrderSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
 class ProductDetailView(APIView):
     def get(self, request, product_id):
@@ -68,3 +60,13 @@ class OrderSuccessView(APIView):
     def get(self, request, order_id):
         order = Order.objects.get(id=order_id)
         return Response({"order_id": order.id, "timestamp": order.timestamp})
+    
+
+class OrderView(APIView):
+    def post(self, request):
+        serializer = OrderSerializer(data=request.data)
+        if serializer.is_valid():
+            order = serializer.save()
+            # Перенаправьте пользователя на страницу успешного заказа с номером заказа
+            return redirect('order-success', order_id=order.id)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
