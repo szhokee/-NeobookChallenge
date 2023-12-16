@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.apps import apps
+from django.shortcuts import redirect
 from .models import Category, Product, CartItem, Order
 from .serializers import CategorySerializer, ProductSerializer, CartItemSerializer, OrderSerializer
 
@@ -21,11 +22,6 @@ class ProductListView(APIView):
         serializer = ProductSerializer(products, many=True)
         return Response({"products": serializer.data})
 
-# class ProductListView(APIView):
-#     def get(self, request, category_id):
-#         products = Product.objects.filter(category_id=category_id)
-#         serializer = ProductSerializer(products, many=True)
-#         return Response({"products": serializer.data})
 
 class CartView(APIView):
     def get(self, request):
@@ -56,6 +52,7 @@ class ProductDetailView(APIView):
         serializer = ProductSerializer(product)
         return Response(serializer.data)
 
+
 class OrderSuccessView(APIView):
     def get(self, request, order_id):
         order = Order.objects.get(id=order_id)
@@ -70,3 +67,16 @@ class OrderView(APIView):
             # Перенаправьте пользователя на страницу успешного заказа с номером заказа
             return redirect('order-success', order_id=order.id)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class OrderHistoryView(APIView):
+    def get(self, request):
+        orders = Order.objects.all().order_by('-timestamp')  # Сортировка по дате в убывающем порядке
+        serializer = OrderSerializer(orders, many=True)
+        return Response({"orders": serializer.data})
+
+class OrderDetailsView(APIView):
+    def get(self, request, order_id):
+        order = Order.objects.get(id=order_id)
+        serializer = OrderSerializer(order)
+        return Response({"order": serializer.data})
