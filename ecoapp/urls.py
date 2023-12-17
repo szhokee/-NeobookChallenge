@@ -18,6 +18,5 @@ urlpatterns = [
     path('order/', OrderView.as_view(), name='create-order'),
     path('order/success/<int:order_id>/', OrderSuccessView.as_view(), name='order-success'),
     path('api/order/place/', OrderView.as_view(), name='order-place'),
-     path('order/history/', OrderHistoryView.as_view(), name='order-history'),
     path('order/history/<int:order_id>/', OrderDetailsView.as_view(), name='order-details'),
 ]

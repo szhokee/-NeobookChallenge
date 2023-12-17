@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.apps import apps
 from django.shortcuts import redirect
+from django.urls import reverse
 from .models import Category, Product, CartItem, Order
 from .serializers import CategorySerializer, ProductSerializer, CartItemSerializer, OrderSerializer
 
@@ -64,8 +65,8 @@ class OrderView(APIView):
         serializer = OrderSerializer(data=request.data)
         if serializer.is_valid():
             order = serializer.save()
-            # Перенаправьте пользователя на страницу успешного заказа с номером заказа
-            return redirect('order-success', order_id=order.id)
+            # Используем reverse для динамического создания URL
+            return redirect(reverse('order-success', args=[order.id]))
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
