@@ -12,8 +12,8 @@ from .serializers import CategorySerializer, ProductSerializer, CartItemSerializ
 class CategoryListView(APIView):
     def get(self, request):
         categories = Category.objects.all()
-        CategorySerializer = apps.get_model('ecoapp', 'CategorySerializer')
-        serializer = CategorySerializer(categories, many=True)
+        category_serializer = apps.get_model('ecoapp', 'CategorySerializer')
+        serializer = category_serializer(categories, many=True)
         return Response({"categories": serializer.data})
 
 
