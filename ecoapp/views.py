@@ -23,7 +23,6 @@ class ProductListView(APIView):
         serializer = ProductSerializer(products, many=True)
         return Response({"products": serializer.data})
 
-
 class CartView(APIView):
     def get(self, request):
         cart_items = CartItem.objects.all()
