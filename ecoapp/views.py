@@ -64,8 +64,10 @@ class OrderView(APIView):
         serializer = OrderSerializer(data=request.data)
         if serializer.is_valid():
             order = serializer.save()
-            # Используем reverse для динамического создания URL
-            return redirect(reverse('order-success', args=[order.id]))
+            if order.items.exists():
+                return redirect(reverse('order-success', args=[order.id]))
+            else:
+                return Response({"error": "Заказ не может быть оформлен с пустой корзиной."}, status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
